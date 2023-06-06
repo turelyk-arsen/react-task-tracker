@@ -2,9 +2,11 @@ import "./App.css";
 import Header from "./components/Header";
 import { useState } from "react";
 import Tasks from "./components/Tasks";
+import AddTask from "./components/AddTask";
 
 function App() {
   // const x = 'Arsen'
+  const [showAddTask, setShowAddTask] = useState(false);
   const [tasks, setTasks] = useState([
     {
       id: 1,
@@ -28,14 +30,37 @@ function App() {
 
   // delete task
   const deleteTask = (id) => {
-    console.log("delete", id);
+    // console.log("delete", id);
+    setTasks(tasks.filter((task) => task.id !== id));
   };
-  
+
+  // add task
+  const addTask = (task) => {
+    // console.log(task)
+    const id = Math.floor(Math.random() * 10000) + 1;
+    const newTask = { id, ...task };
+    setTasks([...tasks, newTask]);
+  };
+
+  const toggleReminder = (id) => {
+    // console.log(id);
+    setTasks(
+      tasks.map((task) =>
+        task.id === id ? { ...task, reminder: !task.reminder } : task
+      )
+    );
+  };
+
   return (
     <div className="container">
-      <Header title="Task Tracker" />
+      <Header onAdd={() => setShowAddTask(!showAddTask)} showAdd={showAddTask}/>
+      {showAddTask && <AddTask onAdd={addTask} />}
       {/* <h1>Hello React and {x}</h1> */}
-      <Tasks tasks={tasks} onDelete={deleteTask} />
+      {tasks.length > 0 ? (
+        <Tasks tasks={tasks} onDelete={deleteTask} onToggle={toggleReminder} />
+      ) : (
+        "No Tasks To Show"
+      )}
     </div>
   );
 }
