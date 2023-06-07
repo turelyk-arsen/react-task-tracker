@@ -1,8 +1,11 @@
 import "./App.css";
 import Header from "./components/Header";
 import { useState } from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Tasks from "./components/Tasks";
 import AddTask from "./components/AddTask";
+import Footer from "./components/Footer";
+import About from "./components/About";
 
 function App() {
   // const x = 'Arsen'
@@ -52,20 +55,38 @@ function App() {
   };
 
   return (
-    <div className="container">
-      <h1>REACT</h1>
-      <Header
-        onAdd={() => setShowAddTask(!showAddTask)}
-        showAdd={showAddTask}
-      />
-      {showAddTask && <AddTask onAdd={addTask} />}
-      {/* <h1>Hello React and {x}</h1> */}
-      {tasks.length > 0 ? (
-        <Tasks tasks={tasks} onDelete={deleteTask} onToggle={toggleReminder} />
-      ) : (
-        "No Tasks To Show"
-      )}
-    </div>
+    <BrowserRouter>
+      <div className="container">
+        <h1>REACT</h1>
+        <Header
+          onAdd={() => setShowAddTask(!showAddTask)}
+          showAdd={showAddTask}
+        />
+
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <div>
+                {showAddTask && <AddTask onAdd={addTask} />}
+                {/* <h1>Hello React and {x}</h1> */}
+                {tasks.length > 0 ? (
+                  <Tasks
+                    tasks={tasks}
+                    onDelete={deleteTask}
+                    onToggle={toggleReminder}
+                  />
+                ) : (
+                  "No Tasks To Show"
+                )}
+              </div>
+            }
+          />
+          <Route path="/about" element={<About />} />
+        </Routes>
+        <Footer />
+      </div>
+    </BrowserRouter>
   );
 }
 
